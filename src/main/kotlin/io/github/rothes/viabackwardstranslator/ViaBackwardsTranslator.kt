@@ -12,7 +12,7 @@ object ViaBackwardsTranslator {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        println("\nViaBackwardsTranslator v1.0\n - Code By Rothes")
+        println("\nViaBackwardsTranslator v1.1\n - Code By Rothes")
         println("\n")
 
         val loadLocale = loadLocale()
@@ -21,7 +21,7 @@ object ViaBackwardsTranslator {
 
         translate(loadLocale)
 
-        println("\n\nViaBackwardsTranslator v1.0\n - Code By Rothes")
+        println("\n\nViaBackwardsTranslator v1.1\n - Code By Rothes")
         println("\nThanks for using!")
     }
 
