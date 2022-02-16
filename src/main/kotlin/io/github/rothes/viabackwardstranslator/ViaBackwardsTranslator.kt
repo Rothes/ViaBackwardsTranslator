@@ -37,12 +37,7 @@ object ViaBackwardsTranslator {
         val jsonObject = jsonElement.asJsonObject
         val result = mutableMapOf<String, String>()
         for (key in jsonObject.keySet()) {
-            if (
-                key.startsWith("entity.minecraft.")
-                || key.startsWith("block.minecraft.")
-                || key.startsWith("item.minecraft.")
-            )
-                result[key] = jsonObject.getAsJsonPrimitive(key).asString
+            result[key] = jsonObject.getAsJsonPrimitive(key).asString
         }
         return result.toMap()
     }
@@ -109,6 +104,29 @@ object ViaBackwardsTranslator {
                 it.write(result)
             }
 
+        }
+
+        val translationMappings = File(pluginFolder, "translation-mappings.json")
+        if (translationMappings.exists()) {
+            println("\nNow processing ${translationMappings.name}")
+
+            val jsonElement = JsonParser.parseString(readFile(translationMappings))
+            val jsonObject = jsonElement.asJsonObject
+            for (version in jsonObject.keySet()) {
+                for (key in jsonObject.getAsJsonObject(version).keySet()) {
+                    val locale = localeMap[key]
+                    if (locale == null) {
+                        println("!!! Cannot find translation for $key, ignoring.")
+                        continue
+                    }
+                    jsonObject.getAsJsonObject(version).addProperty(key, locale)
+                }
+            }
+
+            val result = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(jsonElement)
+            translationMappings.writer(Charsets.UTF_8).use {
+                it.write(result)
+            }
         }
     }
 
